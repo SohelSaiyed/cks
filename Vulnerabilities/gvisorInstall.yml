@@ -1,0 +1,62 @@
+
+1. download and instal 
+`
+sudo apt-get update && \
+sudo apt-get install -y \
+    apt-transport-https \
+    ca-certificates \
+    curl \
+    gnupg
+
+curl -fsSL https://gvisor.dev/archive.key | sudo gpg --dearmor -o /usr/share/keyrings/gvisor-archive-keyring.gpg
+sudo add-apt-repository "deb [arch=amd64,arm64] https://storage.googleapis.com/gvisor/releases master main"
+
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/gvisor-archive-keyring.gpg] https://storage.googleapis.com/gvisor/releases release main" | sudo tee /etc/apt/sources.list.d/gvisor.list > /dev/null
+
+sudo apt-get update && sudo apt-get install -y runsc
+`
+
+or
+
+
+`
+curl -fsSL https://gvisor.dev/archive.key | sudo apt-key add -
+sudo add-apt-repository "deb [arch=amd64,arm64] https://storage.googleapis.com/gvisor/releases release main"
+
+sudo apt-get update && sudo apt-get install -y runsc
+`
+
+# edit containerd config
+`
+cat <<EOF | sudo tee /etc/containerd/config.toml
+version = 2
+[plugins."io.containerd.runtime.v1.linux"]
+  shim_debug = true
+[plugins."io.containerd.grpc.v1.cri".containerd.runtimes.runc]
+  runtime_type = "io.containerd.runc.v2"
+[plugins."io.containerd.grpc.v1.cri".containerd.runtimes.runsc]
+  runtime_type = "io.containerd.runsc.v1"
+EOF
+
+sudo systemctl restart containerd
+`
+
+
+or 
+
+
+`
+vi /etc/containerd/config.toml
+# add after [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.runc]
+[plugins."io.containerd.grpc.v1.cri".containerd.runtimes.runsc]
+    runtime_type = "io.containerd.runsc.v1"
+
+
+# add after: [plugins."io.containerd.runtime.v1.linux"]
+shim_debug = true
+
+sudo systemctl restart containerd
+`
+
+# to test the msg that contianer running on which host:
+`kubectl exec <podname> -n <namespace> -- dmesg`

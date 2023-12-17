@@ -1,0 +1,43 @@
+# Ubuntu/Debian
+```
+apt-mark unhold kubeadm && \
+apt-get update && apt-get install -y \
+kubeadm=1.xx.xx-00 && \
+apt-mark hold kubeadm 
+```
+upgrade kubelet:
+```
+apt-mark unhold kubelet kubectl && \
+apt-get update && apt-get install -y \
+kubelet=1.xx.x-00 kubectl=1.xx.xx-00 && \
+apt-mark hold kubelet kubectl
+
+```
+
+# Centos/RHEL
+```
+yum install -y kubeadm-1.22.x-0 \
+--disableexcludes=kubernetes
+```
+# upgrade kubelet
+```
+yum install -y kubelet-1.xx.x-0 \
+kubectl-1.xx.x-0 \
+--disableexcludes=kubernetes
+```
+
+# kubeadm upgrade
+- kubeadm version 
+- kubeadm upgrade plan 
+- sudo kubeadm upgrade apply v1.xx.x
+
+# upgrade additional master node:
+- sudo kubeadm upgrade node
+- kubectl drain <node> --ignore-daemonsets 
+
+# restart kubelet and daemon-reload
+sudo systemctl daemon-reload
+sudo systemctl restart kubelet
+kubectl uncordon <node>
+
+# upgrade worker node use the same command as additional master node

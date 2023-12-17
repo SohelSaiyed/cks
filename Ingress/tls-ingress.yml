@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: myingress
+  namespace: ingresstest
+  labels:
+    name: myingress
+spec:
+  tls:
+  - hosts:
+      - ingress.test
+    secretName: ingress-tls
+  rules:
+  - host: ingress.test<Host>
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: <ServiceName>
+            port: 
+              number: <Port>

@@ -1,0 +1,5 @@
+# Security Policy 
+- to activate policy: `--enable-admission-plugins` on kubernetes API server
+
+# MTLS get csr from the certificate
+kubectl get csr <certificateName> -o jsonpath='{.status.certificate}' | base64 --decode

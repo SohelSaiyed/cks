@@ -1,0 +1,15 @@
+
+#To install kube_bench on node and get out put.
+1. curl -L https://github.com/aquasecurity/kube-bench/releases/download/v0.6.9/kube-bench_0.6.9_linux_amd64.deb -o kube-bench_0.6.9_linux_amd64.deb
+sudo apt install ./kube-bench_0.6.9_linux_amd64.deb -f
+
+2. sudo kube-bench | egrep "profiling|authorization"
+
+# Kubelet config file location : /var/lib/kubelet/config.yaml
+
+# To make change to control plane components (API server, etcd, etc): /etc/kubernetes/manifests
+
+# to check where the kubelet config is located: 
+- service kubelet status 
+   # check the DropIn location and see the file location: 
+cd /usr/lib/systemd/system/kubelet.service.d

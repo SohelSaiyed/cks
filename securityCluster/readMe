@@ -1,0 +1,48 @@
+# To download checksum of the binary of kubectl
+```
+curl -LO "https://dl.k8s.io/v<version>/bin/linux/amd64/kubectl.sha256"
+```
+
+# check the checksum on installed binary
+```
+echo "$(<kubectl.sha256) /usr/bin/kubectl" | sha256sum --check 
+```
+
+# kubelet check auth on the node after editing kubelet.conf file to not allow annomoys users:
+ - curl https://localhost:10250/pods/ -k
+
+# check with cert: 
+ curl https://localhost:10250/pods/ -k --key /etc/kubernetes/pki/ca.key --cert /etc/kubernetes/pki/ca.crt
+ 
+# netstat commands:
+ - check all open port: netstat -an | grep LISTEN
+
+Port used by K8S:
+Protocol	Port-Range	    Purpose
+TCP	         6443-	        Kubernetes API Server
+TCP	         2379-2380      etcd server client API
+TCP	         10250	        Kubelet API
+TCP	         10251	        kube-scheduler
+TCP	         10252	        kube-controller-manager
+TCP	         10255	        Read-Only Kubelet API
+
+Worker Nod:
+Protocol	Port-Range	 Purpose
+TCP	        10250	     Kubelet API
+TCP	        10255	     Read-Only Kubelet API
+TCP	        30000-32767	 NodePort Services
+
+# check sha for the binary file:
+- kubelet: 
+  * kubectl version --short --client
+  * curl -LO "https://dl.k8s.io/v<version>/bin/linux/amd64/kubectl.sha256"
+  * echo "$(<kubectl.sha256) /usr/bin/kubectl" | sha256sum --check 
+
+ or 
+ ```
+ wget https://github.com/kubernetes/kubernetes/releases/download/v1.22.3/kubernetes.tar.gz
+
+  apt install hashalot
+  sha256 kubernetes.tar.gz
+  sha512sum kubernetes.tar.gz
+ ```

@@ -1,0 +1,40 @@
+# AppArmor profile
+ - create an AppArmor profile. The profile will prevent the process from writing any data to the disk
+ ```
+ sudo vi /etc/apparmor.d/deny-write
+ ```
+
+ deny-write - profile:
+ ```
+ #include <tunables/global> 
+ profile deny-write flags=(attach_disconnected) {
+    #include <abstractions/base>
+    file,
+    # Deny all file writes.
+    deny /** w,
+ }
+ ```
+
+run the profile:
+```
+sudo apparmor_parser /etc/apparmor.d/deny-write
+
+# -C flag for complain mode
+# by default profile deploys with enforce mode
+```
+
+# accessing kubeserver api via kubectl proxy:
+```
+kubectl proxy --port=8080 & curl http://localhost:8080/api/
+```
+
+#accessing cluster with Token 
+```
+export CLUSTER_NAME="your_server_name"
+
+APISERVER=$(kubectl config view -o jsonpath="{.cluster[?(@.name==\"$CLUSTER_NAME\")].cluster.server}")
+
+TOKEN=$(kubectl get secrets -o jsonpath="{.items[?(@.metadata.annotations['kubernetes\.io/service-account\.name']=='default')].data.token}" |base64 --decode)
+
+curl -X GET $APISERVER/api --header "Authorization:Bearer $TOKEN" --insecure
+```

@@ -1,0 +1,4 @@
+# To generate TLS certificate
+```
+openssl req -nodes -new -x509 -keyout tls-ingress.key -out tls-ingress.crt -subj "/CN=ingress.test"
+
