@@ -1,0 +1,14 @@
+c-b, z to view in full screen
+c-b, z back to original windows
+
+c-b, c - to create new window
+c-b, p - go to previous window
+
+tmux ls - shows current active windows
+tmux attach -t 0 to attach to 0 window
+
+c-b, ? - to see all tmux options
+
+c-b, d - detach the session
+
+c-d - to kill the session
